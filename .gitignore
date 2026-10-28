@@ -1,0 +1,18 @@
+# Credenciais
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# dbt
+dbt/xptoz/target/
+dbt/xptoz/dbt_packages/
+dbt/xptoz/logs/
+dbt/xptoz/.user.yml
+
+# Airflow
+logs/
+airflow-data/

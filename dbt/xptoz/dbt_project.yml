@@ -1,0 +1,23 @@
+name: xptoz
+version: "1.0.0"
+config-version: 2
+
+profile: xptoz
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  xptoz:
+    staging:
+      +schema: staging
+      +materialized: table
+    intermediate:
+      +schema: intermediate
+      +materialized: table
+    marts:
+      +schema: marts
+      +materialized: table

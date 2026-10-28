@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: int_users_enriquecido
+    description: Cadastro com o nome separado em primeiro/último nome e o domínio do e-mail extraído.
+    columns:
+      - name: id
+        data_tests: [unique, not_null]
+      - name: nome
+      - name: primeiro_nome
+        data_tests: [not_null]
+      - name: ultimo_nome
+      - name: email
+      - name: dominio_email
+        description: Parte do e-mail após o "@".
+        data_tests: [not_null]
+      - name: idade
+      - name: cidade
+      - name: created_at
+      - name: updated_at

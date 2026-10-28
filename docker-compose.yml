@@ -1,0 +1,47 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: xptoz-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-xptoz}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-xptoz}
+      POSTGRES_DB: xptoz
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-xptoz} -d xptoz"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  airflow:
+    build: .
+    image: xptoz-airflow:latest
+    container_name: xptoz-airflow
+    command: standalone
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER:-xptoz}:${POSTGRES_PASSWORD:-xptoz}@postgres:5432/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__DEFAULT_TIMEZONE: America/Sao_Paulo
+      AIRFLOW__API_AUTH__JWT_SECRET: ${AIRFLOW_JWT_SECRET}
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS: "True"
+      DBT_PROJECT_DIR: /opt/airflow/dbt/xptoz
+      DBT_PROFILES_DIR: /opt/airflow/dbt/xptoz
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./scripts:/opt/airflow/scripts
+      - ./dbt:/opt/airflow/dbt
+      - ./logs:/opt/airflow/logs
+
+volumes:
+  postgres-data:

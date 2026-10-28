@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: mart_dominios_email
+    description: Quantidade de cadastros por domínio de e-mail.
+    columns:
+      - name: dominio_email
+        data_tests: [unique, not_null]
+      - name: total_registros
+        data_tests:
+          - not_null
+          - entre:
+              arguments:
+                min: 1
+                max: 1000000000
+      - name: created_at
+      - name: updated_at

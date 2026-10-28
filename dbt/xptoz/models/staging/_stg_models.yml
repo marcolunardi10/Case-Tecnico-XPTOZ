@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: stg_users_info
+    description: >
+      Cadastro padronizado: textos em maiúsculas, sem espaços extras e sem
+      pronomes de tratamento no nome. Inclui campos de controle created_at/updated_at.
+    columns:
+      - name: id
+        data_tests: [unique, not_null]
+      - name: nome
+        data_tests: [not_null]
+      - name: email
+        data_tests:
+          - unique
+          - not_null
+          - email_valido
+      - name: idade
+        data_tests:
+          - not_null
+          - entre:
+              arguments:
+                min: 18
+                max: 80
+      - name: cidade
+      - name: created_at
+      - name: updated_at
